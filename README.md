@@ -3,6 +3,7 @@
 
 
 #### WINDOW 1
+```
 clear
 WORK_DIR_ROOT="/tmp"
 rm -rf "${WORK_DIR_ROOT}/openziti-sidecar"
@@ -21,10 +22,11 @@ docker run \
   -p1280:1280 \
   -p3022:3022 \
   openziti/ziti-cli:1.1.8 edge quickstart
-
+```
 
 
 #### WINDOW 2
+```
 clear
 WORK_DIR_ROOT="/tmp"
 WORK_DIR="${WORK_DIR_ROOT}/openziti-sidecar"
@@ -48,9 +50,11 @@ docker run \
   -e ZITI_BOOTSTRAP=true \
   -e ZITI_ROUTER_ADVERTISED_ADDRESS="not.needed" \
   openziti/ziti-router:main
+```
 
 
 #### Window 3
+```
 clear
 WORK_DIR_ROOT="/tmp"
 WORK_DIR="${WORK_DIR_ROOT}/openziti-sidecar"
@@ -73,14 +77,18 @@ docker run \
   -e ZITI_ROUTER_MODE="tproxy" \
   -e ZITI_ROUTER_ADVERTISED_ADDRESS="not.needed" \
   openziti/ziti-router:main
+```
 
 
 #### Window 4
+```
 clear
 docker run --rm --name ziti.blue-hello --network ziti-blue --hostname blue.hello.ziti openziti/hello-world
+```
 
 
 #### Window 5
+```
 clear
 ziti edge create config "blue-hello-intercept.v1" intercept.v1 \
   '{"portRanges":[{"high":80,"low":80}],"addresses":["hello.blue.ziti"],"protocols":["tcp"]}'
@@ -109,14 +117,8 @@ ziti edge policy-advisor identities -q
 ziti edge list terminators
 
 docker run -it --rm --name ziti.blue-client-on-red-network --network ziti-red openziti/quickstart curl hello.blue.ziti -m1
-docker run -it --rm --name ziti.blue-client-on-red-network --network container:ziti.red-router openziti/quickstart curl http://hello.blue.ziti -m1
-
-
-
-
-
+docker run -it --rm --name ziti.blue-client-on-red-network --network ziti-blue openziti/quickstart curl http://hello.blue.ziti -m1
 docker run -it --rm --name ziti.blue-client-on-red-network --network container:ziti.red-router openziti/quickstart curl hello.blue.ziti -m1
-docker run -it --rm --name ziti.blue-client-on-red-network --network container:ziti.red-router curlimages/curl curl http://hello.blue.ziti -m1
-docker run   --rm -it   --network container:ziti.red-router   --entrypoint bash   openziti/quickstart -c "curl http://hello.blue.ziti"
-
+# curl container doesn't work for reasonsdocker run -it --rm --name ziti.blue-client-on-red-network --network container:ziti.red-router curlimages/curl     curl hello.blue.ziti -m1
+```
 
